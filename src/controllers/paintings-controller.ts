@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import paintingsService from "../services/paintings-service.js";
+import mongoose from "mongoose";
+import { error } from "console";
 
 const paintingsController = Router();
 
@@ -31,6 +33,21 @@ paintingsController.get('/', async (req: Request, res: Response) => {
             data = await paintingsService.getAll();
         }
 
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ error })
+    }
+});
+
+paintingsController.get('/:paintingId', async (req: Request, res: Response) => {
+    let paintingId = req.query.projectId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(paintingId)) {
+        return res.status(400).json({ error: 'Invalid Painting ID'});
+    }
+
+    try {
+        const data = await paintingsService.getOne(paintingId);
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ error })
