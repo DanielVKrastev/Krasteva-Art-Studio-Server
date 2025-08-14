@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import paintingsService from "../services/paintings-service.js";
 import mongoose from "mongoose";
+import { getErrorMessage } from "../utils/errorUtils.js";
 
 const paintingsController = Router();
 
@@ -39,8 +40,8 @@ paintingsController.get('/', async (req: Request, res: Response) => {
 });
 
 paintingsController.get('/:paintingId', async (req: Request, res: Response) => {
-    let paintingId = req.query.projectId as string;
-
+    let paintingId = req.params.paintingId as string;
+    
     if(!mongoose.Types.ObjectId.isValid(paintingId)) {
         return res.status(400).json({ error: 'Invalid Painting ID'});
     }
