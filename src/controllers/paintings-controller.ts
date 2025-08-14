@@ -92,4 +92,20 @@ paintingsController.patch('/:paintingId', async (req: Request, res: Response) =>
     }
 });
 
+paintingsController.delete('/:paintingId', async (req: Request, res: Response) => {
+    let paintingId = req.params.paintingId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(paintingId)) {
+        return res.status(400).json({ error: 'Invalid Painting ID'});
+    }
+
+    try{
+        await paintingsService.delete(paintingId);
+        return res.status(200).json({ message: 'Delete success!'});
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
 export default paintingsController;
