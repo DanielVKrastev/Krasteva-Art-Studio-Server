@@ -57,14 +57,39 @@ paintingsController.get('/:paintingId', async (req: Request, res: Response) => {
 paintingsController.post('/', async (req: Request, res: Response) => {
     
     try{
-        const data = req.body;
+        const data: object = req.body;
 
         const createdData = await paintingsService.create(data);
         res.status(200).json(createdData);
     }catch(error) {
-        return res.status(400).json({ error });
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
     }
 
+});
+
+paintingsController.patch('/:paintingId', async (req: Request, res: Response) => {
+    let paintingId = req.params.paintingId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(paintingId)) {
+        return res.status(400).json({ error: 'Invalid Painting ID'});
+    }
+
+    const newData: object = req.body;
+
+    try{
+        const updatedData = await paintingsService.update(paintingId, newData);
+
+        if(!updatedData) {
+            return res.status(400).json({error: 'Painting not found.'});
+        }
+
+        return res.status(200).json(updatedData);
+
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
 });
 
 export default paintingsController;
