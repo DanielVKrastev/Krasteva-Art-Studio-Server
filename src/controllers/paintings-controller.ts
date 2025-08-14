@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import paintingsService from "../services/paintings-service.js";
 import mongoose from "mongoose";
-import { error } from "console";
 
 const paintingsController = Router();
 
@@ -52,6 +51,19 @@ paintingsController.get('/:paintingId', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(400).json({ error })
     }
+});
+
+paintingsController.post('/', async (req: Request, res: Response) => {
+    
+    try{
+        const data = req.body;
+
+        const createdData = await paintingsService.create(data);
+        res.status(200).json(createdData);
+    }catch(error) {
+        return res.status(400).json({ error });
+    }
+
 });
 
 export default paintingsController;
