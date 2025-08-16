@@ -92,4 +92,20 @@ categoriesController.patch('/:categoryId', async (req: Request, res: Response) =
     }
 });
 
+categoriesController.delete('/:categoryId', async (req: Request, res: Response) => {
+    let categoryId = req.params.categoryId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(400).json({ error: 'Invalid Category ID'});
+    }
+
+    try{
+        await categoriesService.delete(categoryId);
+        return res.status(200).json({ message: 'Delete success!'});
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
 export default categoriesController;
