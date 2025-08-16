@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import categoriesService from "../services/categories-service.js";
 import { getErrorMessage } from "../utils/errorUtils.js";
+import mongoose from "mongoose";
 
 const categoriesController = Router();
 
@@ -32,6 +33,21 @@ categoriesController.get('/', async (req: Request, res: Response) => {
             data = await categoriesService.getAll();
         }
 
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ error })
+    }
+});
+
+categoriesController.get('/:categoryId', async (req: Request, res: Response) => {
+    let categoryId = req.params.categoryId as string;
+    
+    if(!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(400).json({ error: 'Invalid Category ID'});
+    }
+
+    try {
+        const data = await categoriesService.getOne(categoryId);
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ error })
