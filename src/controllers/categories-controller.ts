@@ -68,4 +68,28 @@ categoriesController.post('/', async (req: Request, res: Response) => {
 
 });
 
+categoriesController.patch('/:categoryId', async (req: Request, res: Response) => {
+    let categoryId = req.params.categoryId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(400).json({ error: 'Invalid Category ID'});
+    }
+
+    const newData: object = req.body;
+
+    try{
+        const updatedData = await categoriesService.update(categoryId, newData);
+
+        if(!updatedData) {
+            return res.status(400).json({error: 'Category not found.'});
+        }
+
+        return res.status(200).json(updatedData);
+
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
 export default categoriesController;
