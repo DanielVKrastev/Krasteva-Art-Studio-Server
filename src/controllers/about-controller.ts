@@ -92,4 +92,21 @@ aboutController.patch('/:aboutId', async (req: Request, res: Response) => {
     }
 });
 
+aboutController.delete('/:aboutId', async (req: Request, res: Response) => {
+    let aboutId = req.params.aboutId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(aboutId)) {
+        return res.status(400).json({ error: 'Invalid About ID'});
+    }
+
+    try{
+        await aboutService.delete(aboutId);
+        return res.status(200).json({ message: 'Delete success!'});
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
+
 export default aboutController;
