@@ -38,6 +38,21 @@ aboutController.get('/', async (req: Request, res: Response) => {
     }
 });
 
+aboutController.get('/:aboutId', async (req: Request, res: Response) => {
+    let aboutId = req.params.aboutId as string;
+    
+    if(!mongoose.Types.ObjectId.isValid(aboutId)) {
+        return res.status(400).json({ error: 'Invalid About ID'});
+    }
+
+    try {
+        const data = await aboutService.getOne(aboutId);
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ error })
+    }
+});
+
 aboutController.post('/', async (req: Request, res: Response) => {
     
     try{
