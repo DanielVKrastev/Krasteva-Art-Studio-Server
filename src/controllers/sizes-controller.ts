@@ -92,5 +92,21 @@ sizesController.patch('/:sizeId', async (req: Request, res: Response) => {
     }
 });
 
+sizesController.delete('/:sizeId', async (req: Request, res: Response) => {
+    let sizeId = req.params.sizeId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(sizeId)) {
+        return res.status(400).json({ error: 'Invalid Size ID'});
+    }
+
+    try{
+        await sizesService.delete(sizeId);
+        return res.status(200).json({ message: 'Delete success!'});
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
 
 export default sizesController;
