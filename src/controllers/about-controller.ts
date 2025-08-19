@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import aboutService from "../services/about-service.js";
 import { getErrorMessage } from "../utils/errorUtils.js";
+import mongoose from "mongoose";
 
 const aboutController = Router();
 
@@ -67,5 +68,28 @@ aboutController.post('/', async (req: Request, res: Response) => {
 
 });
 
+aboutController.patch('/:aboutId', async (req: Request, res: Response) => {
+    let aboutId = req.params.aboutId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(aboutId)) {
+        return res.status(400).json({ error: 'Invalid About ID'});
+    }
+
+    const newData: object = req.body;
+
+    try{
+        const updatedData = await aboutService.update(aboutId, newData);
+
+        if(!updatedData) {
+            return res.status(400).json({error: 'About not found.'});
+        }
+
+        return res.status(200).json(updatedData);
+
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
 
 export default aboutController;
