@@ -39,15 +39,15 @@ sizesController.get('/', async (req: Request, res: Response) => {
     }
 });
 
-sizesController.get('/:paintingId', async (req: Request, res: Response) => {
-    let paintingId = req.params.paintingId as string;
+sizesController.get('/:sizeId', async (req: Request, res: Response) => {
+    let sizeId = req.params.sizeId as string;
     
-    if(!mongoose.Types.ObjectId.isValid(paintingId)) {
+    if(!mongoose.Types.ObjectId.isValid(sizeId)) {
         return res.status(400).json({ error: 'Invalid Size ID'});
     }
 
     try {
-        const data = await sizesService.getOne(paintingId);
+        const data = await sizesService.getOne(sizeId);
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ error })
@@ -66,6 +66,30 @@ sizesController.post('/', async (req: Request, res: Response) => {
         return res.status(400).json({ error: errorMessage });
     }
 
+});
+
+sizesController.patch('/:sizeId', async (req: Request, res: Response) => {
+    let sizeId = req.params.sizeId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(sizeId)) {
+        return res.status(400).json({ error: 'Invalid Size ID'});
+    }
+
+    const newData: object = req.body;
+
+    try{
+        const updatedData = await sizesService.update(sizeId, newData);
+
+        if(!updatedData) {
+            return res.status(400).json({error: 'Size not found.'});
+        }
+
+        return res.status(200).json(updatedData);
+
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
 });
 
 
