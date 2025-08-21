@@ -24,7 +24,6 @@ const orderSchema = new Schema<OrderDocument>({
     },
     id: {
         type: String,
-        required: [true, "Order ID is required"]
     },
     lastName: {
         type: String,
