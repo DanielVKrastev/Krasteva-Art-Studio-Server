@@ -94,4 +94,21 @@ ordersController.patch('/:orderId', async (req: Request, res: Response) => {
     }
 });
 
+ordersController.delete('/:orderId', async (req: Request, res: Response) => {
+    let orderId = req.params.orderId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(400).json({ error: 'Invalid Order ID'});
+    }
+
+    try{
+        await ordersService.delete(orderId);
+        return res.status(200).json({ message: 'Delete success!'});
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
+
 export default ordersController;
