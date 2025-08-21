@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 
 import { getErrorMessage } from "../utils/errorUtils.js";
+import mongoose from "mongoose";
 import ordersService from "../services/orders-service.js";
 
 const ordersController = Router();
@@ -33,6 +34,21 @@ ordersController.get('/', async (req: Request, res: Response) => {
             data = await ordersService.getAll();
         }
 
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ error })
+    }
+});
+
+ordersController.get('/:orderId', async (req: Request, res: Response) => {
+    let orderId = req.params.orderId as string;
+    
+    if(!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(400).json({ error: 'Invalid Order ID'});
+    }
+
+    try {
+        const data = await ordersService.getOne(orderId);
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ error })
