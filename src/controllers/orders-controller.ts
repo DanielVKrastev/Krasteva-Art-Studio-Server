@@ -69,4 +69,29 @@ ordersController.post('/', async (req: Request, res: Response) => {
 
 });
 
+ordersController.patch('/:orderId', async (req: Request, res: Response) => {
+    let orderId = req.params.orderId as string;
+
+    if(!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(400).json({ error: 'Invalid Order ID'});
+    }
+
+    const newData: object = req.body;
+    
+    try{
+        const updatedData = await ordersService.update(orderId, newData);
+        console.log(updatedData);
+        
+        if(!updatedData) {
+            return res.status(400).json({error: 'Order not found.'});
+        }
+
+        return res.status(200).json(updatedData);
+
+    }catch(error){
+        const errorMessage = getErrorMessage(error);
+        return res.status(400).json({ error: errorMessage });
+    }
+});
+
 export default ordersController;
