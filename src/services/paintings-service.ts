@@ -15,9 +15,9 @@ export default {
         return creadtedData;
     },
     async update(id: string, updateData: object){
-        const updateContact = await Painting.findByIdAndUpdate(id, updateData, {new: true, runValidators: true });
+        const update = await Painting.findByIdAndUpdate(id, updateData, {new: true, runValidators: true });
         
-        return this.getOne(updateContact?.id);
+        return update;
     },
     async delete(id: String){
         return await Painting.findByIdAndDelete(id);

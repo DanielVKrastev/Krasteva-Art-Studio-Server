@@ -16,9 +16,9 @@ export default {
         return creadtedData;
     },
     async update(id: string, updateData: object){
-        const updateContact = await About.findByIdAndUpdate(id, updateData, {new: true, runValidators: true });
+        const update = await About.findByIdAndUpdate(id, updateData, {new: true, runValidators: true });
         
-        return this.getOne(updateContact?.id);
+        return update;
     },
     async delete(id: String){
         return await About.findByIdAndDelete(id);
