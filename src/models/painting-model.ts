@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const paintingSchema = new Schema({
 
@@ -28,10 +28,12 @@ const paintingSchema = new Schema({
         requied: [true, 'Sold is required']
     },
     category: {
-        type: String,
+        type: Types.ObjectId,
+        ref: 'Category',
     },
     size: {
-        type: String,
+        type: Types.ObjectId,
+        ref: 'Size',
     },
     paints: {
         type: String,
