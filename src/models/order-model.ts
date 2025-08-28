@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { DeliveryType, Order, OrderStatus } from "../interfaces/Order.js";
 
 export interface OrderDocument extends Order, Document { }
@@ -27,8 +27,9 @@ const orderSchema = new Schema<OrderDocument>({
         required: [true, "Last name is required"]
     },
     paintingIds: {
-        type: [String],
-        required: [true, "Painting IDs are required"]
+        type: [Types.ObjectId],
+        required: [true, "Painting IDs are required"],
+        ref: 'Painting',
     },
     postCode: {
         type: String,
